@@ -1107,7 +1107,7 @@ def write_model_card(
         hf_class      = "Wav2Vec2ForCTC"
         description   = (
             f"Wav2Vec2 CTC ASR model ({size_label}) converted from the "
-            f"[OmniLingual](https://github.com/Ahmedfull02/omnilingual_asr) "
+            f"[OmniLingual](https://github.com/facebookresearch/omnilingual-asr) "
             f"fairseq2 checkpoint `{fairseq2_card}`.\n\n"
             "This model outputs CTC logits over a SentencePiece vocabulary and "
             "can transcribe speech in multiple languages."
@@ -1139,7 +1139,7 @@ print(transcript)
         hf_class      = "Wav2Vec2Model"
         description   = (
             f"Wav2Vec2 SSL encoder ({size_label}) converted from the "
-            f"[OmniLingual](https://github.com/Ahmedfull02/omnilingual_asr) "
+            f"[OmniLingual](https://github.com/facebookresearch/omnilingual-asr) "
             f"fairseq2 checkpoint `{fairseq2_card}`.\n\n"
             "This is the **pre-trained encoder backbone without a CTC head**, "
             "suitable for feature extraction, probing, and fine-tuning on "
@@ -1204,10 +1204,6 @@ pipeline_tag: {pipeline_tag}
 |---|---|
 {arch_table}
 
-## Conversion & verification
-
-Converted from the original fairseq2 checkpoint using the
-[omnilingual_to_hf](https://github.com/Ahmedfull02/omnilingual_to_hf) conversion script.
 
 {verified_note}
 
