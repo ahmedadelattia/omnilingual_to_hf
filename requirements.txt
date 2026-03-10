@@ -1,0 +1,12 @@
+# ── Standard pip dependencies ─────────────────────────────────────────────────
+torch>=2.0.0
+torchaudio>=2.0.0          # audio loading and resampling in the parity check
+transformers>=5.3.0        # Wav2Vec2ForCTC, Wav2Vec2Config, Wav2Vec2CTCTokenizer
+huggingface_hub>=0.20.0    # HfApi.upload_folder, create_repo, login
+
+# ── fairseq2 / omnilingual_asr ────────────────────────────────────────────────
+# These packages are NOT available on PyPI and must be installed separately
+# inside the omnilingual conda environment.  See README.md for instructions.
+#
+#   fairseq2          (loading OmniASR models via fairseq2 hub)
+#   omnilingual_asr   (registers OmniASR model cards with fairseq2)
