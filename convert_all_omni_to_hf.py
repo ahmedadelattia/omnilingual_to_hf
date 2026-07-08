@@ -1310,6 +1310,28 @@ def convert_and_push_one(
     else:
         arch = detect_arch(fs2_sd)
 
+    # BUGFIX: detect_arch infers num_attention_heads = hidden_size // 64, assuming
+    # head_dim == 64 for every size. That is wrong for the 1B (head_dim 80 → 16 heads,
+    # not 20) and 3B/7B (head_dim 128 → 16 heads, not 32); all OmniASR CTC sizes use 16
+    # heads. The wrong head split (and attention scale) perturbs attention enough to
+    # collapse the 3B/7B CTC decode to blank/gibberish on hard inputs while short clips
+    # still pass. The true count is not recoverable from the state dict (q/k/v are
+    # [hidden,hidden]), so read it from the loaded fairseq2 model's first self-attention.
+    true_heads = next(
+        (
+            m.num_heads
+            for m in fs2_model.modules()
+            if getattr(m, "num_heads", None) is not None and hasattr(m, "head_dim")
+        ),
+        None,
+    )
+    if true_heads is not None and true_heads != arch["num_attention_heads"]:
+        logger.warning(
+            "[%s] correcting num_attention_heads %d → %d (fairseq2 head_dim=%d, not 64)",
+            tag, arch["num_attention_heads"], true_heads, arch["hidden_size"] // true_heads,
+        )
+        arch["num_attention_heads"] = true_heads
+
     # ── Step 3: Write tokenizer files (CTC only) ──────────────────────────────
     if model_type == "ssl":
         blank_id = None
